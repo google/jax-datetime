@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "jax-datetime"
+version = "0.1.0"  # keep sync with __init__.py
+description = "JAX compatible datetime and timedelta types"
+authors = [
+    {name = "Google LLC", email = "noreply@google.com"},
+]
+readme = "README.md"
+license = {file = "LICENSE"}
+requires-python = ">=3.11"
+dependencies = [
+    "jax",
+    "numpy",
+]
+
+[project.optional-dependencies]
+tests = [
+    "absl-py",
+    "chex",
+    "pytest",
+]

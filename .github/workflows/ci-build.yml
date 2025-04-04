@@ -10,6 +10,7 @@ on:
   workflow_dispatch:
 
 jobs:
+  # Run unit tests
   pytest-job:
     name: "python ${{ matrix.python-version }}"
     runs-on: ubuntu-latest
@@ -43,4 +44,26 @@ jobs:
         pip install -e .[tests]
     - name: Run unit tests
       run: |
-        pytest -v jax-datetime
+        pytest -v jax_datetime
+
+  # Auto-publish when version is increased
+  publish-job:
+    # Only try to publish if:
+    # * Repo is self (prevents running from forks)
+    # * Branch is `main`
+    if: |
+      github.repository == 'neuralgcm/dinosaur'
+      && github.ref == 'refs/heads/main'
+    needs: pytest-job  # Only publish after tests are successful
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    timeout-minutes: 30
+
+    steps:
+    # Publish the package (if local `__version__` > pip version)
+    - uses: etils-actions/pypi-auto-publish@v1
+      with:
+        pypi-token: ${{ secrets.PYPI_API_TOKEN }}
+        gh-token: ${{ secrets.GITHUB_TOKEN }}
+        parse-changelog: false

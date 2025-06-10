@@ -57,6 +57,18 @@ class NumpyFuncsTest(parameterized.TestCase):
     actual = jdt.interp(query, deltas, jnp.arange(3))
     self.assertEqual(actual, expected)
 
+  def test_interp_array_size_one(self):
+    deltas = jdt.Timedelta(days=jnp.arange(1))
+    query = jdt.Timedelta(days=0, seconds=0)
+    expected = 1.0
+    actual = jdt.interp(query, deltas, jnp.ones(1))
+    self.assertEqual(actual, expected)
+
+    query = jdt.Timedelta(days=1, seconds=6 * 60 * 60)
+    expected = 1.0
+    actual = jdt.interp(query, deltas, jnp.ones(1))
+    self.assertEqual(actual, expected)
+
 
 if __name__ == "__main__":
   absltest.main()

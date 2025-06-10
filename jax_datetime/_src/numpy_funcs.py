@@ -51,7 +51,14 @@ def interp(x: ArrayLike, xp: ArrayLike, fp: Array) -> Array:
   df = fp[i] - fp[i - 1]
   dx = xp[i] - xp[i - 1]
   delta = x - xp[i - 1]
-  f = fp[i - 1] + (delta / dx) * df
+  epsilon = core.Timedelta(0, 0)
+  dx0 = dx <= epsilon  # if dx0 is zero, interpolation is skipped to avoid nan.
+  # update dx to be non-zero if dx0 is True.
+  dx = jax.tree.map(lambda x, y: jnp.where(dx0, x, y), core.Timedelta(0, 1), dx)
+  f = jax.tree.map(
+      lambda x, y: jnp.where(dx0, x, y),
+      fp[i - 1], fp[i - 1] + (delta / dx) * df
+  )
   f = jnp.where(x < xp[0], fp[0], f)
   f = jnp.where(x > xp[-1], fp[-1], f)
   return f

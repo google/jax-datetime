@@ -78,6 +78,17 @@ class TimedeltaTest(parameterized.TestCase):
     self.assertLen(delta, 3)
     self.assertEqual(delta.ndim, 1)
     self.assertEqual(delta[1], jdt.Timedelta(days=1, seconds=1))
+    self.assertIsInstance(delta[1].days, jax.Array)
+
+  def test_numpy_array_properties(self):
+    delta = jdt.Timedelta(days=np.arange(3), seconds=np.arange(3))
+    self.assertEqual(delta.shape, (3,))
+    self.assertEqual(delta.size, 3)
+    self.assertLen(delta, 3)
+    self.assertEqual(delta.ndim, 1)
+    self.assertEqual(delta[1], jdt.Timedelta(days=1, seconds=1))
+    self.assertIsInstance(jdt.Timedelta(days=1, seconds=1).days, np.ndarray)
+    self.assertIsInstance(delta[1].days, np.ndarray)
 
   def test_transpose(self):
     delta = jdt.Timedelta(days=jnp.array([[1, 2]]), seconds=jnp.array([[3, 4]]))

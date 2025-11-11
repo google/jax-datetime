@@ -66,8 +66,11 @@ class PytreeArray:
   def transpose(self, axes: tuple[int, ...]) -> PytreeArray:
     return jax.tree.map(lambda x: x.transpose(axes), self)
 
-  def __getitem__(self, index) -> Array:
-    return jax.tree.map(lambda x: x[index], self)
+  def __getitem__(self, index) -> Self:
+    # Indexing of numpy array can result in scalar values, causing
+    # inconsistencies in the pytree structures. To avoid that, np.ScalarType is
+    # returned in an array form, similar to how jax.Array handles indexing.
+    return jax.tree.map(lambda x: _asarray(x[index]), self)
 
   # Take precedence over numpy arrays in binary arithmetic.
   __array_priority__ = 100
@@ -89,8 +92,8 @@ def _zeros_like(other: np.ndarray | jax.Array):
 _SECONDS_PER_DAY = 24 * 60 * 60
 
 
-def _asarray(x: np.integer | Array) -> Array:
-  return np.asarray(x) if isinstance(x, np.integer) else x
+def _asarray(x: np.generic | Array) -> Array:
+  return np.asarray(x) if isinstance(x, np.generic) else x
 
 
 def _normalize_days_seconds(days: Array, seconds: Array) -> tuple[Array, Array]:

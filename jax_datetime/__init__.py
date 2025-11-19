@@ -27,4 +27,4 @@ from jax_datetime._src.numpy_funcs import (
     searchsorted as searchsorted,
 )
 
-__version__ = "0.1.0"  # keep sync with pyproject.toml
+__version__ = "0.1.1"  # keep sync with pyproject.toml

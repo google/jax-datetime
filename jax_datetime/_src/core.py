@@ -375,6 +375,11 @@ class Timedelta(PytreeArray):
     else:
       return NotImplemented  # type: ignore
 
+  def reshape(self, shape: tuple[int, ...]) -> Timedelta:
+    return Timedelta(
+        jnp.reshape(self.days, shape), jnp.reshape(self.seconds, shape)
+    )
+
   # TODO(shoyer): implement __divmod__ and __mod__
 
   def _comparison_op(wrapped):  # pylint: disable=no-self-argument
@@ -535,6 +540,9 @@ class Datetime(PytreeArray):
       return other.delta - self.delta
     else:
       return NotImplemented  # type: ignore
+
+  def reshape(self, shape: tuple[int, ...]) -> Datetime:
+    return Datetime(self.delta.reshape(shape))
 
   def _comparison_op(wrapped):  # pylint: disable=no-self-argument
     """Private decorator for implementing comparison ops."""

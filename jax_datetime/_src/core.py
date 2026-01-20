@@ -66,6 +66,9 @@ class PytreeArray:
   def transpose(self, axes: tuple[int, ...]) -> PytreeArray:
     return jax.tree.map(lambda x: x.transpose(axes), self)
 
+  def reshape(self, shape: tuple[int, ...]) -> PytreeArray:
+    return jax.tree.map(lambda x: x.reshape(shape), self)
+
   def __getitem__(self, index) -> Self:
     # Indexing of numpy array can result in scalar values, causing
     # inconsistencies in the pytree structures. To avoid that, np.ScalarType is

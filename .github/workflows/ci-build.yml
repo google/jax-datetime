@@ -52,7 +52,7 @@ jobs:
     # * Repo is self (prevents running from forks)
     # * Branch is `main`
     if: |
-      github.repository == 'neuralgcm/dinosaur'
+      github.repository == 'google/jax-datetime'
       && github.ref == 'refs/heads/main'
     needs: pytest-job  # Only publish after tests are successful
     runs-on: ubuntu-latest

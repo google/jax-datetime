@@ -111,7 +111,7 @@ def _normalize_days_seconds(days: Array, seconds: Array) -> tuple[Array, Array]:
 def _to_int_seconds(delta: Timedelta) -> jnp.ndarray:
   """Returns total seconds as an integer."""
   # This works for timedeltas less than 2**31 seconds, which is ~68 years.
-  return delta.days * _SECONDS_PER_DAY + delta.seconds
+  return delta.days * _SECONDS_PER_DAY + delta.seconds  # pyrefly: ignore[bad-return]
 
 
 _INT32_MAX = 2**31 - 1
@@ -182,7 +182,7 @@ class Timedelta(PytreeArray):
       days = np.asarray(0)
       seconds = np.asarray(0)
     elif days is None:
-      seconds = _as_integer_array(seconds, name='seconds')
+      seconds = _as_integer_array(seconds, name='seconds')  # pyrefly: ignore[bad-argument-type]
       days = _zeros_like(seconds)
     elif seconds is None:
       days = _as_integer_array(days, name='days')
@@ -389,39 +389,39 @@ class Timedelta(PytreeArray):
       if not isinstance(other, TimedeltaLike):
         return NotImplemented  # type: ignore
       other = to_timedelta(other)
-      return wrapped(self, other)
+      return wrapped(self, other)  # pyrefly: ignore[not-callable]
 
     return wrapper
 
-  @_comparison_op
+  @_comparison_op  # pyrefly: ignore[bad-argument-type]
   def __eq__(self, other: Timedelta) -> jnp.ndarray:
     return (self.days == other.days) & (self.seconds == other.seconds)
 
-  @_comparison_op
+  @_comparison_op  # pyrefly: ignore[bad-argument-type]
   def __ne__(self, other: Timedelta) -> jnp.ndarray:
     return (self.days != other.days) | (self.seconds != other.seconds)
 
-  @_comparison_op
+  @_comparison_op  # pyrefly: ignore[bad-argument-type]
   def __lt__(self, other: Timedelta) -> jnp.ndarray:
-    return (self.days < other.days) | (
+    return (self.days < other.days) | (  # pyrefly: ignore[bad-return]
         (self.days == other.days) & (self.seconds < other.seconds)
     )
 
-  @_comparison_op
+  @_comparison_op  # pyrefly: ignore[bad-argument-type]
   def __le__(self, other: Timedelta) -> jnp.ndarray:
-    return (self.days < other.days) | (
+    return (self.days < other.days) | (  # pyrefly: ignore[bad-return]
         (self.days == other.days) & (self.seconds <= other.seconds)
     )
 
-  @_comparison_op
+  @_comparison_op  # pyrefly: ignore[bad-argument-type]
   def __gt__(self, other: Timedelta) -> jnp.ndarray:
-    return (self.days > other.days) | (
+    return (self.days > other.days) | (  # pyrefly: ignore[bad-return]
         (self.days == other.days) & (self.seconds > other.seconds)
     )
 
-  @_comparison_op
+  @_comparison_op  # pyrefly: ignore[bad-argument-type]
   def __ge__(self, other: Timedelta) -> jnp.ndarray:
-    return (self.days > other.days) | (
+    return (self.days > other.days) | (  # pyrefly: ignore[bad-return]
         (self.days == other.days) & (self.seconds >= other.seconds)
     )
 
@@ -548,31 +548,31 @@ class Datetime(PytreeArray):
       if not isinstance(other, DatetimeLike):
         return NotImplemented  # type: ignore
       other = to_datetime(other)
-      return wrapped(self, other)
+      return wrapped(self, other)  # pyrefly: ignore[not-callable]
 
     return wrapper
 
-  @_comparison_op
+  @_comparison_op  # pyrefly: ignore[bad-argument-type]
   def __eq__(self, other: Datetime) -> jnp.ndarray:
     return self.delta == other.delta
 
-  @_comparison_op
+  @_comparison_op  # pyrefly: ignore[bad-argument-type]
   def __ne__(self, other: Datetime) -> jnp.ndarray:
     return self.delta != other.delta
 
-  @_comparison_op
+  @_comparison_op  # pyrefly: ignore[bad-argument-type]
   def __lt__(self, other: Datetime) -> jnp.ndarray:
     return self.delta < other.delta
 
-  @_comparison_op
+  @_comparison_op  # pyrefly: ignore[bad-argument-type]
   def __le__(self, other: Datetime) -> jnp.ndarray:
     return self.delta <= other.delta
 
-  @_comparison_op
+  @_comparison_op  # pyrefly: ignore[bad-argument-type]
   def __gt__(self, other: Datetime) -> jnp.ndarray:
     return self.delta > other.delta
 
-  @_comparison_op
+  @_comparison_op  # pyrefly: ignore[bad-argument-type]
   def __ge__(self, other: Datetime) -> jnp.ndarray:
     return self.delta >= other.delta
 
@@ -655,7 +655,7 @@ def to_timedelta(
     Value cast to a jax_datetime.Timedelta object.
   """
   if unit is not None:
-    return _to_timedelta_from_units(value, unit)
+    return _to_timedelta_from_units(value, unit)  # pyrefly: ignore[bad-argument-type]
 
   match value:
     case Timedelta():

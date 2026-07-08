@@ -49,8 +49,8 @@ def interp(x: ArrayLike, xp: ArrayLike, fp: Array) -> Array:
     raise ValueError('xp and fp must be one-dimensional arrays of equal size')
   i = jnp.clip(searchsorted(xp, x, side='right'), 1, len(xp) - 1)
   df = fp[i] - fp[i - 1]
-  dx = xp[i] - xp[i - 1]
-  delta = x - xp[i - 1]
+  dx = xp[i] - xp[i - 1]  # pyrefly: ignore[unsupported-operation]
+  delta = x - xp[i - 1]  # pyrefly: ignore[unsupported-operation]
   epsilon = core.Timedelta(0, 0)
   dx0 = dx <= epsilon  # if dx0 is zero, interpolation is skipped to avoid nan.
   # update dx to be non-zero if dx0 is True.
